@@ -1,21 +1,24 @@
 import { Entity, PrimaryGeneratedColumn, Column } from "typeorm"
+import { IsString,  IsAlpha, IsInt, Min, Max,  } from "class-validator"
 
 @Entity()
 export class User {
-  constructor (firstName, lastName, age) {
-    this.first_name = firstName;
-    this.last_name = lastName;
-    this.age = age;
-  }
     @PrimaryGeneratedColumn()
     id: number
 
     @Column()
-    first_name: string
+    @IsString()
+    @IsAlpha()
+    firstName: string
 
     @Column()
-    last_name: string
+    @IsString()
+    @IsAlpha()
+    lastName: string
 
     @Column()
+    @IsInt()
+    @Min(20)
+    @Max(90)
     age: number
 }
