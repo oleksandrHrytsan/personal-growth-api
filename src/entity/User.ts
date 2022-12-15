@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm"
+import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import { IsString, IsAlpha, IsNumber, Min, Max, IsInt } from 'class-validator';
 
 @Entity()
 export class User {
@@ -11,11 +12,19 @@ export class User {
     id: number
 
     @Column()
+    @IsString()
+    @IsAlpha()
     first_name: string
 
     @Column()
+    @IsString()
+    @IsAlpha()
     last_name: string
 
     @Column()
+    @IsNumber()
+    @IsInt()
+    @Min(20)
+    @Max(100)
     age: number
 }
