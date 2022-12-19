@@ -4,7 +4,7 @@ import 'reflect-metadata';
 import { plainToClass } from 'class-transformer';
 import { validateOrReject } from 'class-validator';
 
-const data = { firstName: 'Howard', lastName: 'Kleiner', age: 33 };
+const data = { firstName: 'Howard', lastName: 'Kleiner', age: 32 };
 
 async function main() {
   try {
