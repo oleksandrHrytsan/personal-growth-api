@@ -1,22 +1,16 @@
+import * as dotenv from 'dotenv';
+dotenv.config();
 import { AppDataSource } from './data-source';
-import { User } from './entity/User';
 import 'reflect-metadata';
-import { plainToClass } from 'class-transformer';
-import { validateOrReject } from 'class-validator';
-
-const data = { firstName: 'Howard', lastName: 'Kleiner', age: 33 };
+import { app } from './server';
 
 async function main() {
   try {
     await AppDataSource.initialize();
 
-    console.log('Inserting a new user into the database...');
-    const user: User = plainToClass(User, data);
-    await validateOrReject(user);
-
-    await AppDataSource.manager.save(user);
+    app.listen(process.env.PORT);
   } catch (err) {
-    console.log(err);
+    console.error(err.message || err);
   }
 }
 

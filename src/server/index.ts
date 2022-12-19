@@ -1,3 +1,6 @@
 import * as express from 'express';
+import { createUsers } from './routes/create-users';
 
-const app = express();
+export const app = express();
+
+app.use(createUsers);
