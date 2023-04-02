@@ -1,24 +1,25 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
-import { IsString, IsAlpha, IsInt, Min, Max } from 'class-validator';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable } from 'typeorm';
+import { IsString, IsEmail } from 'class-validator';
+import { Address } from './Address';
 
-@Entity()
+@Entity('users')
 export class User {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-  @Column()
+  @Column('varchar')
+  @IsEmail()
+  email: string;
+
+  @Column('varchar')
   @IsString()
-  @IsAlpha()
-  firstName: string;
+  phoneNumber: string;
 
-  @Column()
+  @Column('varchar')
   @IsString()
-  @IsAlpha()
-  lastName: string;
+  password: number;
 
-  @Column()
-  @IsInt()
-  @Min(20)
-  @Max(90)
-  age: number;
+  @ManyToMany(() => Address, (address) => address.users)
+  @JoinTable()
+  addresses: Address[];
 }

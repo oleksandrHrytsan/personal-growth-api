@@ -3,7 +3,12 @@ dotenv.config();
 import 'reflect-metadata';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 import { DataSource } from 'typeorm';
+import { City } from './entity/City';
+import { Queue } from './entity/Queue';
+import { Street } from './entity/Street';
+import { StreetQueue } from './entity/StreetQueue';
 import { User } from './entity/User';
+import { Address } from './entity/Address';
 
 export const AppDataSource = new DataSource({
   type: 'postgres',
@@ -14,7 +19,7 @@ export const AppDataSource = new DataSource({
   database: process.env.DB_NAME,
   synchronize: true,
   logging: false,
-  entities: [User],
+  entities: [City, Queue, Street, StreetQueue, User, Address],
   migrations: [],
   subscribers: [],
 
