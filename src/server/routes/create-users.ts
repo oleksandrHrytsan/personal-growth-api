@@ -2,27 +2,49 @@ import * as express from 'express';
 import * as bodyParser from 'body-parser';
 import { AppDataSource } from '../../data-source';
 import { User } from '../../entity/User';
-import { plainToClass } from 'class-transformer';
 import { validateOrReject } from 'class-validator';
 import 'reflect-metadata';
+import { Address } from '../../entity/Address';
 
 const userRepository = AppDataSource.getRepository(User);
+const addressRepository = AppDataSource.getRepository(Address);
 
 export const createUsers = express.Router();
 
 createUsers.use(bodyParser.json());
 
-createUsers.post('/create', async (req, res) => {
+createUsers.post('/createUsers', async (request, response) => {
   try {
-    const user: User = plainToClass(User, req.body);
+    const { email, phoneNumber, password, city, street, buildingNumber } = request.body;
 
-    await validateOrReject(user, { validationError: { target: false } });
+    const userAddressId = await addressRepository
+      .createQueryBuilder('address')
+      .leftJoinAndSelect('address.city', 'city')
+      .leftJoinAndSelect('address.street', 'street')
+      .select('address.id')
+      .where(
+        'city.name = :cityName AND street.name = :streetName AND address.buildingNumber = :buildingNumber',
+        { cityName: city, streetName: street, buildingNumber: buildingNumber },
+      )
+      .getOne();
 
-    await userRepository.save(user);
+    const newUser = new User();
 
-    res.sendStatus(201).end();
-  } catch (err) {
-    res.sendStatus(400).send(err.message);
-    throw err;
+    const newUserAddress = await addressRepository.findOneBy({ id: userAddressId.id });
+
+    newUser.email = email;
+    newUser.phoneNumber = phoneNumber;
+    newUser.password = password;
+    newUser.addresses = [newUserAddress];
+
+    await validateOrReject(newUser, { validationError: { target: false } });
+
+    await userRepository.save(newUser);
+
+    // response.send(JSON.stringify(user));
+    response.end();
+  } catch (error) {
+    response.send(error.message);
+    throw error;
   }
 });

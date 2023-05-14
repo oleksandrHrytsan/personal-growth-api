@@ -1,9 +1,10 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, Unique } from 'typeorm';
 import { IsAlpha, IsString } from 'class-validator';
 import { Street } from './Street';
 import { Address } from './Address';
 
 @Entity('cities')
+@Unique(['name'])
 export class City {
   @PrimaryGeneratedColumn('uuid')
   id: string;

@@ -1,8 +1,9 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable, Unique } from 'typeorm';
 import { IsString, IsEmail } from 'class-validator';
 import { Address } from './Address';
 
 @Entity('users')
+@Unique(['email', 'phoneNumber', 'password'])
 export class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -17,9 +18,9 @@ export class User {
 
   @Column('varchar')
   @IsString()
-  password: number;
+  password: string;
 
-  @ManyToMany(() => Address, (address) => address.users)
+  @ManyToMany(() => Address, (address) => address.users, { cascade: true })
   @JoinTable()
   addresses: Address[];
 }
